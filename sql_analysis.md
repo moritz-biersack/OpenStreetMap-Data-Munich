@@ -2,15 +2,59 @@
 
 ### Map source and info
 
-TBD
+For this project I decided to have a look at Munich/Germany, because it is where I live and is also a quite popular city arround the world. The OpenStreetMap OSM data was downloaded via the MAPZEN service:
 
-### Data cleaning
+https://mapzen.com/data/metro-extracts/metro/munich_germany/
 
-TBD
+## Data cleaning
+
+### Used scripts
+
+- explore.py => explore data and find problems
+- check_correct.py
+- cleaning.py => main script and import
+
+### Data analysis and cleaning
+
+To explore the data and find possible issues, I create a 'explore.py' script. 
+It allows me to have a look into the ways, nodes and tags and select individual 
+areas for further analysis.
+
+The script takes two arguments: the name of the OSM file and the type of tags 
+that shall be analysed ('way' or 'tag'). After reading the data, it lists the 
+most common tag types. This is helpful as an overview for further exploring.
+
+Also, there is an overview of the top 10 tag types and their most common values.
+
+After this general information, there is a prompt that asks for a tag type. This
+allows to list all values of a tag type, ordered by number of occurences.
+
+The script can be used to find problems in the data. For example if we enter 'addr:city',
+we can finde some wrong values - e.g. 'MÜ', 'Müchen', 'Muchen', etc. While these 
+kind of problems can not be spotted programatically, we create a text file with all 
+the misspelled Names of 'Munich'. We later use this file to recognize bad values 
+and substitute it by the correct one.
+
+Looking at the city names ('addr:city') we see that there are different speelings 
+for the same cities. We correct this by creating a mapping file called 'city-names.txt'. 
+This includes the doublicat/wrong value and maps it to the correct value.
+
+A last mapping file is created for the street names ('addr:street'). First we find 
+typos programatically and then map these wrong values to the right ones. We save the 
+mapping as 'stree-names.txt'.
+
+More details about the encountered problems and their handling can be found in 'findings.txt'.
+
+The functions for spotting problamatic data and correcting it, is included in the 
+'check_and_correct.py' script. This is then used by the major 'cleaning.py' script 
+that walks through the OSM data, corrects it if necessary and exports everything 
+to csv files.
+
+Finally, the csv files are importet into an sqlite database called '**TBD***'.
 
 ## General statistics
 
-### File size
+### File sizes
 ```
 munich_germany.osm      486 MB
 **DBFILE**              274 MB
@@ -19,6 +63,7 @@ nodes.csv               153 MB
 ways_tags.csv           41 MB
 ways_nodes.csv          59 MB
 ways.csv                21 MB
+```
 
 
 ### Number of nodes
