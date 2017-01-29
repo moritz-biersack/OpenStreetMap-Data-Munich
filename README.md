@@ -45,5 +45,7 @@ Utility functions used in several scripts.
   https://gist.github.com/carlward/54ec1c91b62a5f911c42#file-sample_project-md
 - The 'cleaning.py' script and schema.py are from Udacity and were adopted to the projects needs:
   Data Analyst Nanodegree - P3: Wrangling OpenStreetMap Data > Case Study: OpenStreetMap Data [SQl] > Preparing for Database - SQL
+- For the sqlite database the schema of 'swwelch' (linked by Udacity) was used:
+  https://gist.github.com/swwelch/f1144229848b407e0a5d13fcb7fbbd6f
 - As a reference for SQL the official site was used:
   https://www.sqlite.org/lang.html
