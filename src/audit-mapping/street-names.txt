@@ -1,0 +1,5 @@
+Breslauer Straße :Breslauer Straße
+Planegger Str.:Planegger Straße
+münchnerstr:Münchner Straße
+Gutenbergstraßw:Gutenbergstraße
+Münchener Str.:Münchner Straße
