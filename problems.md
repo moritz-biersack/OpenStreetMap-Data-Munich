@@ -4,7 +4,7 @@ This document lists the problems found in the Munich OSM data during data wrangl
 ## Nodes Tags
 
 ### name
--> all kind of different data, e.g.:
+All kind of different data, e.g.:
 - Numbers (5,224,4)
 - Street names (Wilhelm-Kuhnert-Stra√üe)
 - Shops (dm, Penny Markt, Netto)
@@ -48,6 +48,7 @@ Looking at the city names, we can easily see a lot of different spellings of 'M√
 
 ### natural
 Includes some strange values like 'mushroom':
+```
 19635   tree
 24      peak
 13      mushroom
@@ -57,6 +58,7 @@ Includes some strange values like 'mushroom':
 2       scrub
 1       wood
 1       cave_entrance
+```
 
 This is an other example where almost all tags have one value - 'tree' - but some have special ones. Looking at the numbers, one could argue to replace all non-tree tags with 'other'. However, it seems logical that 'peak' only appears very rarely compared to 'tree'. We will leave this for now as it is.
 
@@ -86,13 +88,15 @@ We will leave it as it is, because we will not analyse the source.
 
 ### building
 A lot of strange or wrong values, for example:
-```y, ^yes, 5, #CCCCCC, no```
+```
+y, ^yes, 5, #CCCCCC, no
+```
 
 The values of this include some strange or obviously wrong values. It seems not feasible to automatically clean this. We will leave it as it is and keep it in mind for the analysing part.
 
 ### addr:housenumber
 Very different formatting, most entities occur only once:
-- extra characters ('a','b','c',...), attached differently
+- extra characters ('a', 'b', 'c', ...), attached differently
 - extra description ('Rgb.')
 - ranges (comma separated, '-', ';')
 
