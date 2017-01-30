@@ -274,6 +274,8 @@ WHERE
     cafes.id=nodes.id 
     AND names.id=cafes.id;
 
+```
+
 ```sql
 id          lat         lon         name         
 ----------  ----------  ----------  -------------
