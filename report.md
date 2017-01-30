@@ -21,9 +21,8 @@ before saving it as CSV.
 
 ### Data analysis and cleaning
 
-To explore the data and find possible issues, I create a 'explore.py' script. 
-It allows me to have a look into the ways, nodes and tags and select individual 
-areas for further analysis.
+To explore the data and find possible issues, I created a 'explore.py' script. 
+It allows me to have a look into the ways, nodes and tags and select individual elements for further analysis.
 
 The script takes two arguments: the name of the OSM file and the type of tags 
 that shall be analysed ('way' or 'tag'). After reading the data, it lists the 
@@ -172,7 +171,7 @@ Maturi0n    25530
 To further analyse the nodes and tags, we want to know which types of tags are available:
 
 ```sql
-sqlite> SELECT key, COUNT() as num
+sqlite> SELECT key, COUNT() AS num
 FROM nodes_tags
 GROUP BY key
 ORDER BY num DESC
@@ -242,7 +241,7 @@ sqlite>SELECT value, count()
 FROM nodes_tags 
 WHERE key="amenity" 
 GROUP BY value 
-ORDER BY COUNT() desc 
+ORDER BY COUNT() DESC 
 LIMIT 10;
 ```
 
@@ -267,9 +266,9 @@ Let's create a more informative query. We want to get all cafes with their name 
 ```sql
 SELECT nodes.id,lat,lon,names.value 
 FROM 
-    (select * from nodes_tags 
-    WHERE key="amenity" and value="cafe") as cafes, 
-    (select * from nodes_tags where key="name") as names, 
+    (SELECT * FROM nodes_tags 
+    WHERE key="amenity" and value="cafe") AS cafes, 
+    (SELECT * FROM nodes_tags WHERE key="name") AS names, 
     nodes 
 WHERE 
     cafes.id=nodes.id 
@@ -299,7 +298,7 @@ id          lat         lon         name
 Having a look at the 'keys' in 'nodes_tags', we can spot 'cuisine'. With this we can find out the most popular cuisines in the city:
 
 ```sql
-sqlite>SELECT value, count() as num
+sqlite>SELECT value, count() AS num
 FROM nodes_tags
 WHERE key="cuisine"
 GROUP BY value
@@ -336,7 +335,7 @@ mexican               22
 Another interesting tag is 'leisure'. Here is an overview of the top 20 values of that key:
 
 ```sql
-sqlite>SELECT value, count() as num 
+sqlite>SELECT value, count() AS num 
 FROM nodes_tags 
 WHERE key="leisure" 
 GROUP BY value 
@@ -374,7 +373,7 @@ dog_park              1
 ### Top tag types - ways
 
 ```sql
-sqlite> SELECT key, COUNT() as num
+sqlite> SELECT key, COUNT() AS num
 FROM ways_tags
 GROUP BY key
 ORDER BY num DESC
@@ -440,7 +439,7 @@ parking               2508
 
 ```sql
 sqlite> SELECT value, COUNT() AS num
-from ways_tags
+FROM ways_tags
 WHERE key="maxspeed"
 GROUP BY value
 ORDER BY num DESC
@@ -469,7 +468,7 @@ While there are some strange values, we can clearly see that the most common spe
 
 ```sql
 sqlite> SELECT value, COUNT() AS num
-from ways_tags
+FROM ways_tags
 WHERE key="natural"
 GROUP BY value
 ORDER BY num DESC

@@ -15,6 +15,7 @@ This tag alone will not be suitable for automatic processing such as clustering.
 ### entrance
 Inludes both 'yes' and specific titles:
 
+```
 15786   yes
 2943    main
 34      service
@@ -27,20 +28,23 @@ Inludes both 'yes' and specific titles:
 3       gate
 1       barrier
 1       secondary_entrance
+```
 
 Most of the entrances are just marked as 'yes' or 'main'. More specific labels, such as 'service' or 'emergency', are very rare. Therefore, this tags are not a good source for categorizing.
 
 ### addr:country
-Includes Austria - 
+Includes Austria
 
 Strangely, there is one node that states 'Austria' instead of 'Germany' as county. If we look at the other details, we clearly see that it is a hotel in the city center ('Hotel Motel One Sendlinger Tor'). We will correct this in our cleaning process and replace the country with 'Germany' (or with its code 'DE' to be precise).
 
 ### addr:city
 Wrong values:
 - MÜ
-- Müchen, Muchen, münchen, München???
+- Müchen
+- Muchen
+- münchen
 
-Looking at the city names, we can easily see a lot of different spellings of 'München'. This will be corrected during the cleaning.
+Looking at the city names, we can easily see a lot of different spellings of 'München'. This will be corrected during the cleaning process.
 
 ### natural
 Includes some strange values like 'mushroom':
@@ -82,7 +86,7 @@ We will leave it as it is, because we will not analyse the source.
 
 ### building
 A lot of strange or wrong values, for example:
-y, ^yes, 5, #CCCCCC, no
+```y, ^yes, 5, #CCCCCC, no```
 
 The values of this include some strange or obviously wrong values. It seems not feasible to automatically clean this. We will leave it as it is and keep it in mind for the analysing part.
 
@@ -98,7 +102,7 @@ The values in this tag are unfortunately formatted very differently. Sometimes t
 ## Street Name Audit
 A special script is used to audit the street names ('audit_street_names.py'). It loops through the tags of type 'addr:street' and applies a regular expression to check, if the street name is well formed.
 
-The result of the programatic audit was saved as text file ('audited-stree-names.txt') and  evaluated manually, to build a list of street names that are actually wrong.
+The result of the programatic audit was saved as text file ('audited-street-names.txt') and  evaluated manually, to build a list of street names that are actually wrong.
 
 Surprisingly, this revealed only a hand full of obviously misspelled values. These were:
 
@@ -108,9 +112,9 @@ Surprisingly, this revealed only a hand full of obviously misspelled values. The
 4. Gutenbergstraßw
 5. Münchener Str.
 
-There is one clear typo (1.), three unexpected abbreviations (2., 3., 5.) and an extra space in the first one. 
+There is one clear typo (1.), three unexpected abbreviations (2., 3., 5.) and a trailing space in the first one. 
 
-A file was created to map the wrong values to the correct ones during the data import.
+A file was created to map the wrong values to the correct ones (colon separated).
 
 - Breslauer Straße :Breslauer Straße
 - Planegger Str.:Planegger Straße
@@ -118,4 +122,4 @@ A file was created to map the wrong values to the correct ones during the data i
 - Gutenbergstraßw:Gutenbergstraße
 - Münchener Str.:Münchner Straße
 
-One funny value occurred in the data named 'Lueg ins Land' which translates to 'Lie into the country'. Though, being a Munich citizen, I was not aware of such a street and it sounded like some joke. However, a quick research revealed that there is actually a tower named and a street in front of it named so.
+One funny value occurred in the data named 'Lueg ins Land' which translates to 'Lie into the country'. Though, being a Munich citizen, I was not aware of such a street and it sounded like a joke. However, a quick research revealed that there is actually a tower and a street in front of it named so.
