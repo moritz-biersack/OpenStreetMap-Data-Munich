@@ -2,7 +2,7 @@
 
 ### Map source and info
 
-For this project I decided to have a look at Munich/Germany, because it is where I live and is also a quite popular city arround the world. The OpenStreetMap OSM data was downloaded via the MAPZEN service:
+For this project I decided to have a look at Munich/Germany, because it is where I live and is also a quite popular city around the world. The OpenStreetMap OSM data was downloaded via the MAPZEN service:
 
 https://mapzen.com/data/metro-extracts/metro/munich_germany/
 
@@ -16,7 +16,7 @@ https://mapzen.com/data/metro-extracts/metro/munich_germany/
 - check_correct.py => functions used to correct tags
 - cleaning.py => main script for cleaning and saving csv files
 
-Furthermore, the 'schema.py' can be used to validate the formating of the data 
+Furthermore, the 'schema.py' can be used to validate the formatting of the data 
 before saving it as CSV.
 
 ### Data analysis and cleaning
@@ -32,16 +32,16 @@ most common tag types. This is helpful as an overview for further exploring.
 Also, there is an overview of the top 10 tag types and their most common values.
 
 After this general information, there is a prompt that asks for a tag type. This
-allows to list all values of a tag type, ordered by number of occurences.
+allows to list all values of a tag type, ordered by number of occurrences.
 
 The script can be used to find problems in the data. For example if we enter 'addr:city',
 we can finde some wrong values - e.g. 'MÜ', 'Müchen', 'Muchen', etc. While these 
 kind of problems can not be spotted programatically, we create a text file with all 
 the misspelled Names of Munich ('munich-names.txt'). We later use this file to recognize bad values and substitute it by the correct one.
 
-Looking at the city names ('addr:city') we see that there are different speelings 
+Looking at the city names ('addr:city') we see that there are different spellings 
 for the same cities. We correct this by creating a mapping file called 'city-names.txt'. 
-This includes the doublicat/wrong value and maps it to the correct value.
+This includes the duplicate/wrong value and maps it to the correct value.
 
 A last mapping file is created for the street names ('addr:street'). First we find 
 typos programatically and then map these wrong values to the right ones. We save the 
@@ -49,19 +49,19 @@ mapping as 'stree-names.txt'.
 
 More details about the encountered problems and their handling can be found in 'problems.md'.
 
-The functions for spotting problamatic data and correcting it, is included in the 
+The functions for spotting problematic data and correcting it, is included in the 
 'check_and_correct.py' script. This is then used by the major 'cleaning.py' script 
 that walks through the OSM data, corrects it if necessary and exports everything 
 to csv files.
 
-Finally, the csv files are importet into an sqlite database called '**TBD***'.
+Finally, the csv files are imported into an sqlite database called ‘munich.db’.
 
 ## General statistics
 
 ### File sizes
 ```
 munich_germany.osm      486 MB
-**DBFILE**              274 MB
+munich.db               274 MB
 nodes_tags.csv          29 MB
 nodes.csv               153 MB
 ways_tags.csv           41 MB
@@ -84,8 +84,7 @@ sqlite> SELECT count() FROM ways;
 380416
 
 ### Number of unique users
-Let's first have a look how many users there are in each of the 'nodes' and \
-'ways:
+Let's first have a look how many users there are in each of the 'nodes' and 'ways:
 
 ```sql
 sqlite> SELECT count() 
@@ -101,8 +100,7 @@ FROM
 ```
 2058 
 
-Now we want to combine the two user columns from each table and count the \
-total number of unique users:
+Now we want to combine the two user columns from each table and count the total number of unique users:
 
 ```sql
 sqlite> SELECT count() 
@@ -171,8 +169,7 @@ Maturi0n    25530
 ## Tags
 
 ### Top tag types
-To further analyse the nodes and tags, we want to konw which types of tags \
-are available:
+To further analyse the nodes and tags, we want to know which types of tags are available:
 
 ```sql
 sqlite> SELECT key, COUNT() as num
@@ -265,8 +262,7 @@ parking_en  640
 ```
 
 ### Cafes with info
-Let's create a more informative query. We want to get all cafes with their \
-name and latitude/longitude:
+Let's create a more informative query. We want to get all cafes with their name and latitude/longitude:
 
 ```sql
 SELECT nodes.id,lat,lon,names.value 
@@ -297,11 +293,10 @@ id          lat         lon         name
 244038472   48.1494922  11.5616482  Campanula
 ...
 ```
-(resulting table shortened for presentation puproses)
+(resulting table shortened for presentation purposes)
 
 ### Most popular cuisines
-Having a look at the 'keys' in 'nodes_tags', we can spot 'cuisine'. With \
-this we can find out the most popular cuisines in the city:
+Having a look at the 'keys' in 'nodes_tags', we can spot 'cuisine'. With this we can find out the most popular cuisines in the city:
 
 ```sql
 sqlite>SELECT value, count() as num
@@ -338,8 +333,7 @@ mexican               22
 ```
 
 ### Leisure nodes
-Another interesting tag is 'leisure'. Here is an overview of the top 20 \
-values of that key:
+Another interesting tag is 'leisure'. Here is an overview of the top 20 values of that key:
 
 ```sql
 sqlite>SELECT value, count() as num 
@@ -468,8 +462,7 @@ signals               285
 70                    253 
 ```
 
-While there are some strange values, we can clearly see that the most common \
-speed limit is 30 km/h followed by 50 km/h.
+While there are some strange values, we can clearly see that the most common speed limit is 30 km/h followed by 50 km/h.
 
 
 ### Natural ways
@@ -499,14 +492,9 @@ sand                  9
 ```
 
 ## Further ideas
-We could combine the position of cafes with position of trees (node type \
-'natural'). This way we could find out which cafes are embadded in the \
-greenest area. An idea would be to plot the cafe positions on a map \
-and use the number of trees in a defined radius as a circle size. The cafes \
-with the most trees arround them, would have big green circles.
+We could combine the position of cafes with position of trees (node type 'natural'). This way we could find out which cafes are embedded in the greenest area. An idea would be to plot the cafe positions on a map and use the number of trees in a defined radius as a circle size. The cafes with the most trees around them, would have big green circles.
 
 ### Possible problems
-Probably not every tree is marked with a node. It is likely that clusters of \
-trees are marked by only one node. This could distort the outcome.
+Probably not every tree is marked with a node. It is likely that clusters of trees are marked by only one node. This could distort the outcome.
 
 Also, what if there are areas, where more trees are marked than in others?

@@ -1,9 +1,9 @@
 # OpenStreetMap Data Munich
-In this project the OpenStreetMapData of Munich (Germany) is explored. It was created for my submission to Udacity's Data Analyst Nanodegree - P3: Wrangling OpenStreetMap Data.
+In this project the OpenStreetMap Data of Munich (Germany) is explored. It was created for my submission to Udacity's Data Analyst Nanodegree - P3: Wrangling OpenStreetMap Data.
 
 ## Project Overview
 - report.md: main report about data wrangling and analysis
-- problems.md: details about problems encountert during data wrangling
+- problems.md: details about problems encountered during data wrangling
 - src: scripts, utility files, OSM sample data
 
 ## Source files

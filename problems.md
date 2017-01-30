@@ -1,5 +1,5 @@
 # Problems in Munich OSM Data
-This document lists the proplems found in the Munich OSM data during data wrangling and how these problems are addressed. The issues are separated by 'ways' and 'nodes' tags, as well as by the tag key.
+This document lists the problems found in the Munich OSM data during data wrangling and how these problems are addressed. The issues are separated by 'ways' and 'nodes' tags, as well as by the tag key.
 
 ## Nodes Tags
 
@@ -60,7 +60,7 @@ This is an other example where almost all tags have one value - 'tree' - but som
 ## Ways Tags
 
 ### addr:city
-Wrong or dublicate values:
+Wrong or duplicate values:
 - Pullach, Pullach i./im Isartal
 - Aschheim, aschheim
 - Munich, Münschen, Müchen
@@ -69,14 +69,14 @@ Wrong or dublicate values:
 - Garchin, Garching bei München
 - Ingolstadt
 
-As in the Node tags, the city names inlude quite a few spelling errors. We will fix this in the cleaning process.
+As in the Node tags, the city names include quite a few spelling errors. We will fix this in the cleaning process.
 
 ### source
-Similar or dublicate values:
+Similar or duplicate values:
 - Bing, bing, bing_imagery
 - Yahoo, yahoo, ...
 
-This tag inludes different spellings for - what seems to be - the same source. Though, it is sometimes hard to say, if it is just a different spelling or actually a different source.
+This tag includes different spellings for - what seems to be - the same source. Though, it is sometimes hard to say, if it is just a different spelling or actually a different source.
 
 We will leave it as it is, because we will not analyse the source.
 
@@ -84,21 +84,21 @@ We will leave it as it is, because we will not analyse the source.
 A lot of strange or wrong values, for example:
 y, ^yes, 5, #CCCCCC, no
 
-The values of this include some strang or obviously wrong values. It seems not feasible to automaticaly clean this. We will leave it as it is and keep it in mind for the analysing part.
+The values of this include some strange or obviously wrong values. It seems not feasible to automatically clean this. We will leave it as it is and keep it in mind for the analysing part.
 
 ### addr:housenumber
-Very different formating, most entities occur only once:
-- extra characters ('a','b','c',...), attached differentely
+Very different formatting, most entities occur only once:
+- extra characters ('a','b','c',...), attached differently
 - extra description ('Rgb.')
-- ranges (comma seperated, '-', ';')
+- ranges (comma separated, '-', ';')
 
-The values in this tag are unfortunately formated very differently. Sometimes there are extra characters or descriptions attached and there are cases describing ranges in different manners (different characters). Once again, we will not change this, because it seems impossible to do this programatically.
+The values in this tag are unfortunately formatted very differently. Sometimes there are extra characters or descriptions attached and there are cases describing ranges in different manners (different characters). Once again, we will not change this, because it seems impossible to do this programatically.
     
 
 ## Street Name Audit
 A special script is used to audit the street names ('audit_street_names.py'). It loops through the tags of type 'addr:street' and applies a regular expression to check, if the street name is well formed.
 
-The result of the programatic audit was saved as text file ('audited-stree-names.txt') and  evaluted manually, to build a list of street names that are actually wrong.
+The result of the programatic audit was saved as text file ('audited-stree-names.txt') and  evaluated manually, to build a list of street names that are actually wrong.
 
 Surprisingly, this revealed only a hand full of obviously misspelled values. These were:
 
@@ -108,7 +108,7 @@ Surprisingly, this revealed only a hand full of obviously misspelled values. The
 4. Gutenbergstraßw
 5. Münchener Str.
 
-There is one clear typo (1.), three unexpected abrevations (2., 3., 5.) and an extra space in the first one. 
+There is one clear typo (1.), three unexpected abbreviations (2., 3., 5.) and an extra space in the first one. 
 
 A file was created to map the wrong values to the correct ones during the data import.
 
@@ -118,4 +118,4 @@ A file was created to map the wrong values to the correct ones during the data i
 - Gutenbergstraßw:Gutenbergstraße
 - Münchener Str.:Münchner Straße
 
-One funny value occured in the data named 'Lueg ins Land' which translates to 'Lie into the country'. Though, being a Munich citizen, I was not aware of such a street and it sounded like some joke. However, a quick research revealed that there is actually a tower named and a street in front of it named so.
+One funny value occurred in the data named 'Lueg ins Land' which translates to 'Lie into the country'. Though, being a Munich citizen, I was not aware of such a street and it sounded like some joke. However, a quick research revealed that there is actually a tower named and a street in front of it named so.
