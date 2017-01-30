@@ -58,3 +58,5 @@ Utility functions used in several scripts.
   https://gist.github.com/swwelch/f1144229848b407e0a5d13fcb7fbbd6f
 - As a reference for SQL the official site was used:
   https://www.sqlite.org/lang.html
+- The 'to_str' and 'to_unicode' functions in 'util.py' were taken from the book:
+  Effective Python by Brett Slatkin
