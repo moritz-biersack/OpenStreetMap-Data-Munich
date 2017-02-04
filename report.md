@@ -46,7 +46,7 @@ A last mapping file is created for the street names ('addr:street'). First we fi
 typos programatically and then map these wrong values to the right ones. We save the 
 mapping as 'stree-names.txt'.
 
-More details about the encountered problems and their handling can be found in 'problems.md'.
+More details about the encountered problems and their handling can be found in the next section.
 
 The functions for spotting problematic data and correcting it, is included in the 
 'check_and_correct.py' script. This is then used by the major 'cleaning.py' script 
@@ -54,6 +54,97 @@ that walks through the OSM data, corrects it if necessary and exports everything
 to csv files.
 
 Finally, the csv files are imported into an sqlite database called ‘munich.db’.
+
+## Problems 
+### Problems in Node Tags
+
+**addr:country**
+Includes Austria
+
+Strangely, there is one node that states 'Austria' instead of 'Germany' as county. If we look at the other details, we clearly see that it is a hotel in the city center ('Hotel Motel One Sendlinger Tor'). We will correct this in our cleaning process and replace the country with 'Germany' (or with its code 'DE' to be precise).
+
+**addr:city**
+Wrong values:
+- MÜ
+- Müchen
+- Muchen
+- münchen
+
+Looking at the city names, we can easily see a lot of different spellings of 'München'. This will be corrected during the cleaning process.
+
+### Problems in Way Tags
+
+**addr:city**
+Wrong or duplicate values:
+- Pullach, Pullach i./im Isartal
+- Aschheim, aschheim
+- Munich, Münschen, Müchen
+- Kartlsfeld
+- Grünwald, Grünwald bei München
+- Garchin, Garching bei München
+- Ingolstadt
+
+As in the Node tags, the city names include quite a few spelling errors. We will fix this in the cleaning process.
+
+### Street Name Audit
+A special script is used to audit the street names ('audit_street_names.py'). It loops through the tags of type 'addr:street' and applies a regular expression to check, if the street name is well formed.
+
+The result of the programatic audit was saved as text file ('audited-street-names.txt') and  evaluated manually, to build a list of street names that are actually wrong.
+
+Surprisingly, this revealed only a hand full of obviously misspelled values. These were:
+
+1. Breslauer Straße 
+2. Planegger Str.
+3. münchnerstr
+4. Gutenbergstraßw
+5. Münchener Str.
+
+There is one clear typo (1.), three unexpected abbreviations (2., 3., 5.) and a trailing space in the first one. 
+
+A file was created to map the wrong values to the correct ones (colon separated).
+
+- Breslauer Straße :Breslauer Straße
+- Planegger Str.:Planegger Straße
+- münchnerstr:Münchner Straße
+- Gutenbergstraßw:Gutenbergstraße
+- Münchener Str.:Münchner Straße
+
+One funny value occurred in the data named 'Lueg ins Land' which translates to 'Lie into the country'. Though, being a Munich citizen, I was not aware of such a street and it sounded like a joke. However, a quick research revealed that there is actually a tower and a street in front of it named so.
+
+### Numeric Values Audit
+
+Numeric values like postal codes or phone numbers are expected to be in a well defined form.
+
+By using our 'explore.py' script we can quickly extract the postcodes. There are 98 unique codes in the Munich data set. All are matching the expected form of five digits.
+
+Lets continue with phone numbers.
+
+Looking at the values of the 'phone' tags, we can clearly see a lot of differences in the formatting. Here is an excerpt:
+
+```
+089618989
++49 89 21268470
++49 89 988100
++49 89 202044000
++49 (0) 157 / 92 333 115
+089 (0)172 850 98 00
++49 89 58929632
++49 (0)8142 4104076
++49 89 45216652
++49 89 1504035
+...
+```
+
+There are different forms for the country code ('+49'), for the city code ('89') and the number in general. Besides landline numbers we can also find mobile phone numbers and numbers from different cities (or even other countries).
+
+For our further investigation of the data, we only want to include landline numbers from Munich and mobile phone numbers. 
+Furthermore, we want to make sure that the numbers are having the same format. 
+All numbers should have the form '+49 89 [landline number]' or '+49 [mobile pre number] [mobile number]'. 
+
+This is achieved with a regular expression that matches the valid parts. 
+The last group of the regex is the main number. We remove any special characters or whitspaces from it and append it to the standard prefix. For landline the prefix is always '+49 89 ' and for mobile it is '+49 ' plus the mobile pre-number that we get from the second last regex group.
+
+During the cleaning process we substitute valid numbers with the harmonized ones. If the number is not valid (no regex match), we re-name the tag key to 'phone_bad'. This way all phone numbers in the phone tag are well-formed, but also keep the bad formed for reference.
 
 ## General statistics
 
