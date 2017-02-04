@@ -6,6 +6,7 @@ data and assing it to global variables. Afterwards, `correct_node(tag)` and
 """
 
 from util import to_str
+from audit_phone_no import get_clean_phone_no
 
 MUNICH_NAMES_FILE = 'audit-mapping/munich-names.txt'
 CITY_FILE = 'audit-mapping/city-names.txt'
@@ -14,6 +15,7 @@ STREET_TAG = 'addr:street'
 STREET_FILE = 'audit-mapping/street-names.txt'
 GOOD_MUNICH = 'München'
 COUNTRY_DE = 'DE'
+PHONE_TAG = 'phone'
 
 MUNICH_NAMES = []
 CITY_DICT = {}
@@ -112,6 +114,13 @@ def is_street_name(tag):
 
     return tag_key == STREET_TAG
 
+def is_phone_no(tag):
+    """Return True if tag is phone number."""
+
+    tag_key, _ = get_key_value_of_tag(tag)
+    
+    return tag_key == PHONE_TAG
+
 # --- Correct Functions ---
 # ////////////////////////////////////////////////////////////////////
 
@@ -160,6 +169,19 @@ def correct_street_name(tag):
                 street_names_dict[street_name_og]
     return tag
 
+def correct_phone_no(tag):
+    """Check the form of phone numbers and replace them by
+    harmonized ones.
+    """
+    _, raw_phone_no = get_key_value_of_tag(tag)
+    clean_phone_no = get_clean_phone_no(raw_phone_no)
+    if clean_phone_no is not None:
+        print 'Change phone#:', raw_phone_no, '=>', clean_phone_no
+        tag.attrib['v'] = clean_phone_no
+    else:
+        print 'Bad phone# format:', raw_phone_no, 'make `phone_bad` tag'
+        tag.attrib['k'] = 'phone_bad'
+        tag.attrib['v'] = raw_phone_no
 
 # --- Major correct handler ---
 # ////////////////////////////////////////////////////////////////////
@@ -181,12 +203,14 @@ def correct_node(tag):
     correct_tag(tag, is_munich_name, correct_munich_name)
     correct_tag(tag, is_not_germany, correct_country)
     correct_tag(tag, is_street_name, correct_street_name)
+    correct_tag(tag, is_phone_no, correct_phone_no)
 
 def correct_way(tag):
     """Fires all checks and corrections for the given way `tag`."""
 
     correct_tag(tag, is_city, correct_city_names)
     correct_tag(tag, is_street_name, correct_street_name)
+    correct_tag(tag, is_phone_no, correct_phone_no)
 
 # --- Initialize Globals ---
 # ////////////////////////////////////////////////////////////////////

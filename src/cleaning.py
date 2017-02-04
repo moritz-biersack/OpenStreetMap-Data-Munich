@@ -49,6 +49,9 @@ def iter_tags(element, tags, problem_chars, element_tag_type):
         if element_tag_type == "way":
             CC.correct_way(tag)
 
+        # update tag key 
+        tag_key = tag.attrib['k']
+
         # default tag type
         tag_type = 'regular'
 
