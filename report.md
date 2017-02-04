@@ -10,11 +10,11 @@ https://mapzen.com/data/metro-extracts/metro/munich_germany/
 
 ### Used scripts
 
-- util.py => utility functions
-- explore.py => explore data and find problems
-- audit_street_names.py => find bad street names
-- check_correct.py => functions used to correct tags
-- cleaning.py => main script for cleaning and saving csv files
+- **util.py** => utility functions
+- **explore.py** => explore data and find problems
+- **audit_street_names.py** => find bad street names
+- **check_correct.py** => functions used to correct tags
+- **cleaning.py** => main script for cleaning and saving csv files
 
 Furthermore, the 'schema.py' can be used to validate the formatting of the data 
 before saving it as CSV.
@@ -59,23 +59,29 @@ Finally, the csv files are imported into an sqlite database called ‘munich.db�
 ### Problems in Node Tags
 
 **addr:country**
+
 Includes Austria
 
 Strangely, there is one node that states 'Austria' instead of 'Germany' as county. If we look at the other details, we clearly see that it is a hotel in the city center ('Hotel Motel One Sendlinger Tor'). We will correct this in our cleaning process and replace the country with 'Germany' (or with its code 'DE' to be precise).
 
 **addr:city**
+
 Wrong values:
+```
 - MÜ
 - Müchen
 - Muchen
 - münchen
+```
 
 Looking at the city names, we can easily see a lot of different spellings of 'München'. This will be corrected during the cleaning process.
 
 ### Problems in Way Tags
 
 **addr:city**
+
 Wrong or duplicate values:
+```
 - Pullach, Pullach i./im Isartal
 - Aschheim, aschheim
 - Munich, Münschen, Müchen
@@ -83,6 +89,7 @@ Wrong or duplicate values:
 - Grünwald, Grünwald bei München
 - Garchin, Garching bei München
 - Ingolstadt
+```
 
 As in the Node tags, the city names include quite a few spelling errors. We will fix this in the cleaning process.
 
@@ -92,22 +99,24 @@ A special script is used to audit the street names ('audit_street_names.py'). It
 The result of the programatic audit was saved as text file ('audited-street-names.txt') and  evaluated manually, to build a list of street names that are actually wrong.
 
 Surprisingly, this revealed only a hand full of obviously misspelled values. These were:
-
+```
 1. Breslauer Straße 
 2. Planegger Str.
 3. münchnerstr
 4. Gutenbergstraßw
 5. Münchener Str.
+```
 
 There is one clear typo (1.), three unexpected abbreviations (2., 3., 5.) and a trailing space in the first one. 
 
 A file was created to map the wrong values to the correct ones (colon separated).
-
-- Breslauer Straße :Breslauer Straße
-- Planegger Str.:Planegger Straße
-- münchnerstr:Münchner Straße
-- Gutenbergstraßw:Gutenbergstraße
-- Münchener Str.:Münchner Straße
+```
+Breslauer Straße :Breslauer Straße
+Planegger Str.:Planegger Straße
+münchnerstr:Münchner Straße
+Gutenbergstraßw:Gutenbergstraße
+Münchener Str.:Münchner Straße
+```
 
 One funny value occurred in the data named 'Lueg ins Land' which translates to 'Lie into the country'. Though, being a Munich citizen, I was not aware of such a street and it sounded like a joke. However, a quick research revealed that there is actually a tower and a street in front of it named so.
 
@@ -139,7 +148,7 @@ There are different forms for the country code ('+49'), for the city code ('89')
 
 For our further investigation of the data, we only want to include landline numbers from Munich and mobile phone numbers. 
 Furthermore, we want to make sure that the numbers are having the same format. 
-All numbers should have the form '+49 89 [landline number]' or '+49 [mobile pre number] [mobile number]'. 
+All numbers should have the form '+49 89 *landline number*' or '+49 *mobile pre number (space) mobile number*'. 
 
 This is achieved with a regular expression that matches the valid parts. 
 The last group of the regex is the main number. We remove any special characters or whitspaces from it and append it to the standard prefix. For landline the prefix is always '+49 89 ' and for mobile it is '+49 ' plus the mobile pre-number that we get from the second last regex group.
@@ -226,7 +235,7 @@ FROM
      )
  GROUP BY user    
  ORDER BY count() DESC
- LIMIT 20                                                          
+ LIMIT 10                                                          
  ;
  ```
 
@@ -243,16 +252,6 @@ marek klec  59839
 osmkurt     49277     
 zarl        43253     
 why_not_zo  40894     
-Filius Mar  39739     
-ludwich     35074     
-mawi42      34376     
-q_un_go     33555     
-shorty_de   31489     
-burt13de    28865     
-KPG         27776     
-Anoniman    26360     
-ms2000      25972     
-Maturi0n    25530  
 ```
 
 
@@ -282,48 +281,9 @@ amenity               20219
 natural               19695     
 entrance              18843     
 highway               12411     
-wheelchair            10424     
-ref                   8476      
-type                  7310      
-source                7221      
-shop                  7038      
-barrier               6946      
-level                 6747      
-operator              6293      
-website               5646      
-emergency             5362      
-phone                 5115      
-railway               4778      
-opening_hours         4756      
-position              4453      
-diameter              4426      
-crossing              4417      
-public_transport      4274      
-leaf_type             3912      
-denotation            3636      
-bus                   3485      
-bicycle               3419      
-description           3248      
-created_by            2873      
-note                  2535      
-power                 2331      
-foot                  2123      
-cuisine               1987      
-information           1912      
-access                1801      
-vending               1718      
-network               1709      
-crossing_ref          1585      
-email                 1582      
-tourism               1459      
-backrest              1441      
-leisure               1344      
-place                 1263      
-capacity              1177      
-fax                   1140      
-material              1016  
+... 
 ```
-
+*(resulting table shortened for presentation purposes)*
 
 ### Number of amenities
 
@@ -385,7 +345,7 @@ id          lat         lon         name
 244038472   48.1494922  11.5616482  Campanula
 ...
 ```
-(resulting table shortened for presentation purposes)
+*(resulting table shortened for presentation purposes)*
 
 ### Most popular cuisines
 Having a look at the 'keys' in 'nodes_tags', we can spot 'cuisine'. With this we can find out the most popular cuisines in the city:
@@ -396,7 +356,7 @@ FROM nodes_tags
 WHERE key="cuisine"
 GROUP BY value
 ORDER BY num DESC
-LIMIT 20;
+LIMIT 10;
 ```
 
 ```sql
@@ -412,16 +372,6 @@ bavarian              86
 burger                70        
 indian                69        
 vietnamese            65        
-international         52        
-chinese               47        
-german                43        
-turkish               41        
-ice_cream             39        
-thai                  38        
-coffee_shop           37        
-japanese              36        
-sushi                 26        
-mexican               22 
 ```
 
 ### Leisure nodes
@@ -433,7 +383,7 @@ FROM nodes_tags
 WHERE key="leisure" 
 GROUP BY value 
 ORDER BY num DESC 
-LIMIT 20;
+LIMIT 10;
 ```
 
 ```sql
@@ -449,16 +399,6 @@ tanning_salon         13
 fitness_centre        10        
 adult_gaming_centre   6         
 dance                 6         
-sauna                 5         
-swimming_pool         5         
-bowling_alley         4         
-music_venue           4         
-hackerspace           3         
-swimming_area         3         
-water_park            3         
-common                2         
-dancing;music_venue   1         
-dog_park              1 
 ```
 
 ## Ways
@@ -486,47 +426,9 @@ country               53514
 source                44237     
 name                  38375     
 shape                 36875     
-levels                35405     
-colour                31838     
-surface               30562     
-bicycle               24401     
-maxspeed              21669     
-foot                  17405     
-service               16750     
-access                12196     
-smoothness            11488     
-oneway                11485     
-lanes                 9646      
-layer                 9378      
-amenity               9008      
-landuse               8969      
-lit                   8284      
-level                 7547      
-barrier               7193      
-tunnel                7154      
-ref                   6259      
-height                5642      
-indoor                5384      
-leisure               5014      
-tmc                   4904      
-railway               4821      
-segregated            4598      
-wheelchair            4317      
-orientation           4107      
-gauge                 4106      
-area                  3950      
-note                  3524      
-tracktype             3453      
-incline               3402      
-natural               3071      
-electrified           2957      
-voltage               2914      
-operator              2813      
-frequency             2800      
-public_transport      2568      
-cycleway              2536      
-parking               2508 
+...
 ```
+(resulting table shortened for presentation purposes)
 
 ### Speed limits
 
